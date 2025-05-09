@@ -6,6 +6,7 @@ import { DataGrid } from '@mui/x-data-grid';
 import moment from 'moment';
 import { useNavigate } from 'react-router-dom';
 import LogoutIcon from '@mui/icons-material/Logout';
+import jwtAuthAxios from '../service/axiosConfig';
 
 const API_BASE = 'http://192.168.6.30:3000/r2';
 
@@ -24,7 +25,7 @@ function Uploadfile() {
     if (isFetching.current) return;
     isFetching.current = true;
     try {
-      const res = await axios.get(`${API_BASE}/files`);
+      const res = await jwtAuthAxios.get('r2/files');
       setFiles(res.data);
     } catch (err) {
       alert('Error fetching files');
@@ -55,7 +56,7 @@ function Uploadfile() {
     file.forEach(f => formData.append('file', f));
 
     try {
-      await axios.post(`${API_BASE}/upload`, formData, {
+      await jwtAuthAxios.post('r2/upload', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         }
@@ -75,7 +76,7 @@ function Uploadfile() {
   const handleDelete = async (fileKey) => {
     if (!window.confirm(`Are you sure you want to delete "${fileKey}"?`)) return;
     try {
-      await axios.delete(`${API_BASE}/delete/${fileKey}`);
+      await jwtAuthAxios.delete(`r2/delete/${fileKey}`);
       setFiles((prevFiles) => prevFiles.filter((file) => file.Key !== fileKey));
       fetchFiles();
     } catch (err) {
@@ -104,7 +105,7 @@ function Uploadfile() {
     });
 
     try {
-      await axios.post(`${API_BASE}/replace/${selectedFile.Key}`, formData, {
+      await jwtAuthAxios.post(`r2/replace/${selectedFile.Key}`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         }

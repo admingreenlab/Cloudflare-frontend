@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Button, TextField, Container, Alert, CircularProgress } from '@mui/material';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import jwtAuthAxios from './service/axiosConfig';
 
 const API_BASE = 'http://192.168.6.30:3000/auth/login';
 
@@ -17,7 +18,7 @@ function Login() {
     setLoading(true);
     setError('');
     try {
-      const res = await axios.post(API_BASE, { name: username, password: password });
+      const res = await jwtAuthAxios.post('auth/login', { name: username, password: password });
       if (res.status === 200) {
         localStorage.setItem('loggedIns', 'true');
         navigate('/upload');
